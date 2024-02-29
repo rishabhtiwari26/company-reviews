@@ -1,0 +1,20 @@
+const express= require('express')
+const cors = require('cors')
+const bodyParser = require('body-parser')
+const reviewRoute = require('./router/reviewRoute')
+const sequelize = require('./util/database')
+const Company=require('./models/ratingModel')
+const Description=require('./models/descriptionModel')
+const app=express()
+app.use(bodyParser.json())
+app.use(cors())
+app.use(reviewRoute)
+Description.belongsTo(Company,{constraints:true,onDelete:'CASCADE'})
+Company.hasMany(Description)
+
+
+sequelize.sync()
+    .then(res=>{        
+        app.listen(8000)
+    })
+    .catch(e=>console.log(e))
